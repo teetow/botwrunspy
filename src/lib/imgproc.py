@@ -57,7 +57,7 @@ def threshold(img, c=-10):
     return img
 
 
-def crop(img, ys, ye, xs, xe, postcrop_func=None):
+def crop(img, ys, ye, xs, xe, postcrop_func=None) -> numpy.ndarray:
     img = img[ys:ye, xs:xe]
 
     if postcrop_func:
@@ -66,6 +66,6 @@ def crop(img, ys, ye, xs, xe, postcrop_func=None):
     return img
 
 
-def crop_rect(img, rect: Rect, postcrop_func=None):
+def crop_rect(img, rect: Rect, postcrop_func=None) -> numpy.ndarray:
     ys, ye, xs, xe = rect.scaled(img.shape[1], img.shape[0]).as_tuple()
     return crop(img, ys, ye, xs, xe, postcrop_func)

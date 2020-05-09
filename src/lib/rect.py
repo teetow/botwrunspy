@@ -22,6 +22,10 @@ class Rect():
         )
 
     @classmethod
+    def full(cls):
+        return Rect(0.0, 1.0, 0.0, 1.0)
+
+    @classmethod
     def from_scaled(cls, rect: Rect, w, h):
         return cls(
             rect.y_start / h,

@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 
+from agents.buffspy import parse_buffs
 from agents.mobspy import parse_mob
 from agents.splitspy import parse_splits
 from lib.framegrab import grabframe, grabframes
@@ -10,7 +11,7 @@ from lib.utils import dump
 
 url_joe_talus = "https://www.twitch.tv/videos/613665739?t=00h56m05s"  # joed fighting a Talus
 img_joe_talus = "testdata/joed_talus.png"
-url_dj = "https://www.twitch.tv/videos/613398148?t=04h53m23s" # dj with loading screen
+url_dj = "https://www.twitch.tv/videos/613398148?t=04h53m23s"  # dj with loading screen
 img_dj = "testdata/dj_newlayout.png"
 
 
@@ -39,7 +40,23 @@ def test_dj_splits():
     [print(str(x)) for x in splits]
 
 
+def test_joe():
+    p = PROFILES[Names.JoeDunff]
+    f = grabframe(p.url)
+    buffs = parse_buffs(f, p)
+    print(buffs)
+
+
+def test_jboomr():
+    p = PROFILES[Names.JohnnyBoomr]
+    f = grabframe(p.url)
+    splits = parse_splits(f, p)
+    [print(str(x)) for x in splits]
+
+
 if __name__ == "__main__":
     # test_joed_talus()
     # test_average_frames()
-    test_dj_splits()
+    # test_dj_splits()
+    # test_jboomr()
+    test_joe()

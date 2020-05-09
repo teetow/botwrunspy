@@ -25,8 +25,6 @@ def parse_splits(src: numpy.ndarray, profile: Profile) -> List[Split]:
 
     frame = conform_color(frame, profile.conform_func)
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    frame = cv2.bitwise_not(frame)
-    frame = frame*1.3 - 0.7
     text = parse_image(frame, ParseMode.BlockUniform)
 
     for line in text.split("\n"):

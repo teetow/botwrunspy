@@ -13,7 +13,6 @@ def preprocess(f: numpy.ndarray, p: ParseOp) -> numpy.ndarray:
     crop_rect = p.crop_coords.scaled(f.shape[1], f.shape[0])
     f = crop(f, *(crop_rect.as_tuple()))
     f = cv2.cvtColor(f, cv2.COLOR_BGR2GRAY)
-    print(f.max(), f.min())
     f = cv2.normalize(f, f, 256, 0, cv2.NORM_MINMAX)
     f = cv2.adaptiveThreshold(f, f.max(), cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 999, -50)
     return f
