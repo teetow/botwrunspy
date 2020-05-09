@@ -7,6 +7,7 @@ import numpy
 
 from lib.imgproc import Channelmap
 from lib.rect import Rect
+from lib.tweak import tweak
 from lib.utils import dump
 
 
@@ -36,30 +37,50 @@ class Names(IntEnum):
 
 
 def conform_default(m: Channelmap):
-    out = m.k.astype("uint8")
-    return out
+    frame = m.k.astype("uint8")
+    return frame
+
+
+def conform_specs_splits(m: Channelmap):
+    vals = {'r': 0.359375, 'g': 0.0625, 'b': 0.25, 'c': -0.265625, 'm': 0.0, 'y': -1.0, 'k': -0.09375, 'gain': 1.5, 'offset': -0.9, 'init': -1.0}
+    frame = (
+        (
+            m.r * vals['r'] +
+            m.g * vals['g'] +
+            m.b * vals['b'] +
+            m.c * vals['c'] +
+            m.m * vals['m'] +
+            m.y * vals['y'] +
+            m.k * vals['k']
+        ) * (vals['gain'] + 1.0) 
+        + vals['offset'] * 128
+    )
+    frame = numpy.clip(frame, 0, 255)
+    frame = frame.astype("uint8")
+    frame = cv2.adaptiveThreshold(frame, frame.max(), cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 999, -20)
+    return frame
 
 
 def conform_joe_splits(m: Channelmap):
-    out = ((m.g * 1.0 + m.b * 1.0) * 0.76 - 130)
-    out = 256 - numpy.clip(out, 0, 256)
-    return out
+    frame = ((m.g * 1.0 + m.b * 1.0) * 0.76 - 130)
+    frame = 256 - numpy.clip(frame, 0, 256)
+    return frame
 
 
 def conform_dj_splits(m: Channelmap):
-    out = (
+    frame = (
         m.r * 0.24
         + m.g * 1.4
         - m.b * 0.5
         - m.c * 0.15
     )
-    return numpy.clip(out, 0, 256)
+    return numpy.clip(frame, 0, 256)
 
 
 PROFILES = {
     Names.Specs: Profile(
         "https://www.twitch.tv/specsnstats",
-        lambda m: (m.r * 1.5) - (m.c * 1.5) + (m.b * 1.0) - 25,
+        conform_specs_splits,
         Rect(0.054, 0.439, 0.002, 0.211),  # splits
         Rect(0.104, 0.896, 0.214, 0.998)  # game
     ),
@@ -97,6 +118,7 @@ class Parsetype(IntEnum):
 @dataclass
 class ParseOp():
     crop_coords: Rect
+
 
 PARSES = {
     Parsetype.Bossname: ParseOp(

@@ -44,7 +44,6 @@ re_buff = re.compile(r"(?P<type>[\w ]+).+?(?P<ts>\d{2}:\d{2})")
 
 def parse_buffs(src: numpy.ndarray, profile: Profile):
     frame: numpy.ndarray = src
-    frame = crop_rect(src, profile.game_crop)
     frame = crop_rect(frame, PARSES[Parsetype.Buffs].crop_coords)
     scale_factor = 64 / frame.shape[0]
     frame = cv2.resize(frame, (int(frame.shape[1] * scale_factor), 64))

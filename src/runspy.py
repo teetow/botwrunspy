@@ -40,23 +40,20 @@ def test_dj_splits():
     [print(str(x)) for x in splits]
 
 
-def test_joe():
-    p = PROFILES[Names.JoeDunff]
-    f = grabframe(p.url)
-    buffs = parse_buffs(f, p)
+def test_things():
+    p = PROFILES[Names.Specs]
+    
+    frame = grabframe(p.url)
+    game_frame = crop_rect(frame, p.game_crop)
+    
+    splits = parse_splits(frame, p)
+    buffs = parse_buffs(game_frame, p)
+    mob = parse_mob(game_frame)
+    
+    print([str(x) for x in splits])
     print(str(buffs))
-
-
-def test_jboomr():
-    p = PROFILES[Names.JohnnyBoomr]
-    f = grabframe(p.url)
-    splits = parse_splits(f, p)
-    [print(str(x)) for x in splits]
+    print(str(mob))
 
 
 if __name__ == "__main__":
-    # test_joed_talus()
-    # test_average_frames()
-    # test_dj_splits()
-    # test_jboomr()
-    test_joe()
+    test_things()
