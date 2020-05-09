@@ -44,7 +44,7 @@ def test_joe():
     p = PROFILES[Names.JoeDunff]
     f = grabframe(p.url)
     buffs = parse_buffs(f, p)
-    print(buffs)
+    print(str(buffs))
 
 
 def test_jboomr():
